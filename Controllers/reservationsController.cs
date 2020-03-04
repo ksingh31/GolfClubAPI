@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Transactions;
 using Microsoft.EntityFrameworkCore;
+using GolfClubAPI.DTOs;
 
 namespace GolfClub.API.Controllers
 {
@@ -36,9 +37,27 @@ namespace GolfClub.API.Controllers
             return await _golfrepo.AddReservation(resdata);
         }
 
+        [HttpPost("approve")]
+        public async Task<bool> ApproveReservation(approvalDTO approvalData)
+        {
+            return await _golfrepo.ApproveReservation(approvalData);
+        }
+
         [HttpGet("getTeeTimes")]
         public async Task<IActionResult> GetTeeTimes() {
             var tee = await _golfrepo.GetTeeTimes();
+            return Ok(tee);
+        }
+
+        [HttpDelete("deletereservation")]
+        public async Task<bool> RemoveReservation(int id)
+        {
+            return await _golfrepo.RemoveReservation(id);
+        }
+
+        [HttpGet("getTeeTimesById")]
+        public async Task<IActionResult> GetTeeTimesById(int id) {
+            var tee = await _golfrepo.GetTeeTimesById(id);
             return Ok(tee);
         }
     }

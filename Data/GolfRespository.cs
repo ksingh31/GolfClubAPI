@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using System;
+using GolfClubAPI.DTOs;
 
 namespace GolfClub.API.Data
 {
@@ -25,13 +26,13 @@ namespace GolfClub.API.Data
                 {
                     UserID = resdata.id,
                     ReservationTypeID = resdata.reservationType,
-                    NumberOfPlayers = resdata.noOfPlayer,
-                    approved = resdata.approvalStatus,
-                    Subject = resdata.subject,
-                    StartTime = resdata.startDate,
-                    EndTime = resdata.endDate,
+                    noOfPlayers = resdata.noOfPlayer,
+                    approval = resdata.approvalStatus,
+                    subject = resdata.subject,
+                    startTime = resdata.startDate,
+                    endTime = resdata.endDate,
                     score = 0,
-                    RecurrenceRule = resdata.recurringData,
+                    recurringData = resdata.recurringData,
                 };
                 await _context.Reservations.AddAsync(res);
                 await _context.SaveChangesAsync();
@@ -79,6 +80,36 @@ namespace GolfClub.API.Data
             //     throw ex;
             // }
         }
+
+        public async Task<bool> ApproveReservation(approvalDTO approvalData)
+        {
+            try {
+                var query = (from q in _context.Reservations
+							where q.id == approvalData.id
+							select q).First();
+				query.approval = approvalData.approval;
+				await _context.SaveChangesAsync();
+				return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> RemoveReservation(int id){
+            try
+            {
+                var res = _context.Reservations.Find(id);
+                _context.Reservations.Remove(res);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         
 
         public void Delete<T>(T entity) where T : class
@@ -92,9 +123,15 @@ namespace GolfClub.API.Data
             return reservations;
         }
 
-        public async Task<List<TeeTime>> GetTeeTimes()
+        public async Task<List<Reservation>> GetTeeTimes()
         {
-            var tee = await _context.TeeTime.ToListAsync();
+            var tee = await _context.Reservations.ToListAsync();
+            return tee;
+        }
+
+        public async Task<List<Reservation>> GetTeeTimesById(int id)
+        {
+            var tee = await _context.Reservations.Where(x => x.UserID == id).ToListAsync();
             return tee;
         }
 

@@ -4,14 +4,16 @@ using GolfClub.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GolfClub.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200304014208_Fixes")]
+    partial class Fixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace GolfClub.API.Migrations
 
             modelBuilder.Entity("GolfClub.API.Models.Reservation", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("ReservationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -29,7 +31,7 @@ namespace GolfClub.API.Migrations
                     b.Property<int>("ReservationTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("approval")
@@ -37,6 +39,9 @@ namespace GolfClub.API.Migrations
 
                     b.Property<DateTime>("endTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("id")
+                        .HasColumnType("int");
 
                     b.Property<int>("noOfPlayers")
                         .HasColumnType("int");
@@ -54,9 +59,9 @@ namespace GolfClub.API.Migrations
                     b.Property<string>("subject")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.HasKey("ReservationId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -143,9 +148,7 @@ namespace GolfClub.API.Migrations
                 {
                     b.HasOne("GolfClub.API.Models.User", null)
                         .WithMany("Reservation")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("GolfClub.API.Models.TeeTime", b =>
