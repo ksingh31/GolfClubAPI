@@ -27,7 +27,7 @@ namespace GolfClub.API.Data
                     UserID = resdata.id,
                     ReservationTypeID = resdata.reservationType,
                     noOfPlayers = resdata.noOfPlayer,
-                    approval = resdata.approvalStatus,
+                    approval = resdata.approval,
                     subject = resdata.subject,
                     startTime = resdata.startDate,
                     endTime = resdata.endDate,

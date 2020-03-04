@@ -11,7 +11,7 @@ namespace GolfClub.API.DTOs
         public int reservationType { get; set; }
         public string recurringData { get; set; }
         public int noOfPlayer { get; set; }
-        public int approvalStatus { get; set; }
+        public int approval { get; set; }
 
     }
 }
